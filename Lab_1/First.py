@@ -1,11 +1,11 @@
 import random
+import time
+
+start_time = time.time()
 
 LIMIT = 20
 
-a0 = 5  # initialization of variables
-a1 = 6
-a2 = 7
-a3 = 8
+a0, a1, a2, a3 = [random.randint(1, 100) for i in range(4)]      # initialization of variables
 
 planning_matrix = [[random.randint(0, LIMIT),
                     random.randint(0, LIMIT),
@@ -60,3 +60,4 @@ print(planning_matrix[result_y.index(max(result_y))], ": " + "Y = {0}".format(li
 print("Y standard =", Y_standard)
 print("List y :", list_y)
 print("List with criterion:", result_y)
+print("Program was executed in {0} seconds".format(round((time.time() - start_time), 5)))
