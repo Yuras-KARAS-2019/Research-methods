@@ -1,2 +1,2 @@
 # Welcome to research-methods
-repository for laboratory work
+repository for laboratory works
