@@ -75,7 +75,7 @@ def plan_matrix(n, m, x_range, y_min, y_max):
     return x, y, x_norm
 
 
-def Cochrens_criterion(y, y_aver, n, m):
+def cochrens_criterion(y, y_aver, n, m):
     S_kv = s_kv(y, y_aver, n, m)
     Gp = max(S_kv) / sum(S_kv)
     print('\nПеревірка за критерієм Кохрена')
@@ -145,7 +145,7 @@ def main(n: str, m: str) -> None:
 
         B = find_coefficient(x, y_aver, n)
 
-        Gp = Cochrens_criterion(y, y_aver, n, m)
+        Gp = cochrens_criterion(y, y_aver, n, m)
         print(f'Gp = {Gp}')
         if Gp < G_kr:
             print(f'З ймовірністю {1 - q} дисперсії однорідні.')
