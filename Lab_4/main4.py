@@ -1,22 +1,32 @@
 import math
 import random
 from functools import partial
+import time
 
 import numpy as np
 from scipy.stats import f, t
 
 
 def criterion_of_Student(value, criterion, check):
+    start_Student = time.time()
     if check < criterion:
+        stop = time.time()
+        print(f"Час виконання критерія Стьюдента: {str(stop - start_Student)}")
         return 0
     else:
+        stop = time.time()
+        print(f"Час виконання критерія Стьюдента: {str(stop - start_Student)}")
         return value
 
 
 def cochren_criterion(f1, f2, q):
+    start_cochrane = time.time()
     q1 = q / f1
     fisher_value = f.ppf(q=1 - q1, dfn=f2, dfd=(f1 - 1) * f2)
-    return fisher_value / (fisher_value + f1 - 1)
+    ret = fisher_value / (fisher_value + f1 - 1)
+    stop = time.time()
+    print(f"Час виконання критерія Кохрена: {str(stop - start_cochrane)}")
+    return ret
 
 
 m = 3
@@ -168,9 +178,8 @@ while not flag:
     print("Матриця планування експерименту:")
     print("N   " + "x1  " + "x2  " + "x3    " + "Y1" + " " * 8 + "Y2" + " " * 8 + "Y3")
     for i in range(N):
-        print("{0:=d} {1:=4d} {2:=3d} {3:=3d} {4:=9.5f} {5:=9.5f} {6:=9.5f}".format(i + 1, X_matr[i][0], X_matr[i][1],
-                                                                                    X_matr[i][2], Y_matr[i][0],
-                                                                                    Y_matr[i][1], Y_matr[i][2]))
+        print(f"{i + 1:=d} {X_matr[i][0]:=4d} {X_matr[i][1]:=3d} {X_matr[i][2]:=3d}"
+              f" {Y_matr[i][0]:=9.5f} {Y_matr[i][1]:=9.5f} {Y_matr[i][2]:=9.5f}")
     print('_' * 80, '\n')
 
     y1_nat = B_nat[0] + B_nat[1] * X_matr_natur[0][0] + B_nat[2] * \

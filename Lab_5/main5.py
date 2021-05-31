@@ -3,7 +3,8 @@ import random
 from _pydecimal import Decimal
 from functools import reduce
 from itertools import compress
-
+from tkinter.messagebox import showerror
+import time
 import numpy as np
 from scipy.stats import f, t
 
@@ -95,6 +96,7 @@ def calculate_theoretical_y(x_table, b_coefficients, importance):
 
 
 def fisher_criteria(m, N, d, naturalized_x_table, y_table, b_coefficients, importance):
+    global start_cochrane
     f3 = (m - 1) * N
     f4 = N - d
     q = 0.05
@@ -110,6 +112,13 @@ def fisher_criteria(m, N, d, naturalized_x_table, y_table, b_coefficients, impor
     f_p = float(s_ad / s_v)
     f_t = get_fisher_value(f3, f4, q)
 
+    stop = time.time()
+    if (stop - start_cochrane) > 0.011:
+        showerror("Error", "модель неадекватна, час пошуку перевищив 0.011 сек.")
+        print(f"Час пошуку коефіцієнтів: {str(stop - start_cochrane)}")
+        exit(f"модель неадекватна, час пошуку перевищив 0.011 сек.\nЧас пошуку коефіцієнтів: {str(stop - start_cochrane)}")
+    print(f"Час пошуку коефіцієнтів: {str(stop - start_cochrane)}")
+
     print(f"\nПеревірка адекватності моделі за критерієм Фішера: m = {m}, N = {N}")
     print(f"\nТеоретичні значення y для різних комбінацій факторів:")
     print(f"\n".join([f"{i[0]}: y = {i[1]}" for i in theoretical_values_to_print]))
@@ -123,6 +132,7 @@ def get_fisher_value(f3, f4, q):
 
 
 def main():
+    global start_cochrane
     m = 3
     N = 15
     ymin = 195
@@ -138,6 +148,7 @@ def main():
                          [-1.215, 0, 0],    [+1.215, 0, 0], [0, -1.215, 0], [0, +1.215, 0],
                          [0, 0, -1.215],    [0, 0, +1.215], [0, 0, 0]]
 
+    start_cochrane = time.time()
     factors_table = generate_factors_table(raw_factors_table)
     for row in factors_table:
         print(row)
