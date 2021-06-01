@@ -5,6 +5,7 @@ from numpy.linalg import solve
 from scipy.stats import f, t
 from functools import partial
 from tkinter.messagebox import showinfo, showerror
+import time
 
 
 def regression(x, b):
@@ -145,7 +146,11 @@ def main(n: str, m: str) -> None:
 
         B = find_coefficient(x, y_aver, n)
 
+        start_cochrane = time.time()
         Gp = cochrens_criterion(y, y_aver, n, m)
+        stop = time.time()
+        cochren_time = stop - start_cochrane
+        print(f"Час виконання критерія Кохрена: {cochren_time}")
         print(f'Gp = {Gp}')
         if Gp < G_kr:
             print(f'З ймовірністю {1 - q} дисперсії однорідні.')
@@ -154,13 +159,15 @@ def main(n: str, m: str) -> None:
             m = int(m) + 1
             main(int(n), m)
 
+        start_stusent = time.time()
         ts = students_criterion(x_norm[:, 1:], y, y_aver, n, m)
+        stop_st = time.time()
+        student_time = stop_st - start_stusent
+        print(f"Час виконання критерія Стьюдента: {student_time}")
         print('\nКритерій Стьюдента:\n', ts)
         res = [t for t in ts if t > t_student]
-        final_k = [B[ts.index(i)] for i in ts if i in res]
-        print('Коефіцієнти {} статистично незначущі, тому ми виключаємо їх з рівняння.'.format(
-            [i for i in B if i not in final_k]))
-
+        final_k = [B[ts.index(i)] for i in ts   if i in res]
+        print(f'Коефіцієнти{[i for i in B if i not in final_k]}статистично незначущі,тому ми виключаємо їх з рівняння.')
         y_new = []
         for j in range(n):
             y_new.append(regression([x[j][ts.index(i)] for i in ts if i in res], final_k))
@@ -170,8 +177,13 @@ def main(n: str, m: str) -> None:
 
         d = len(res)
         f4 = n - d
+        start_fisher = time.time()
         F_p = fishers_criterion(y, y_aver, y_new, n, m, d)
-
+        stop_fish = time.time()
+        fisher_time = stop_fish - start_fisher
+        print(f"Час виконання критерія Фішера: {fisher_time}")
+        if student_time + fisher_time + cochren_time > 1:
+            showerror("Error", "Помилка часу виконання.")
         fisher = partial(f.ppf, q=1 - 0.05)
         f_t = fisher(dfn=f4, dfd=f3)  # табличне значення
 

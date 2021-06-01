@@ -1,10 +1,6 @@
-
-
-# print("Лінійне рівняння регресії для нормованих значень х має вигляд : y = b0 + b1 * x1 + b2 * x2")
-
-
 import numpy as np
 from typing import List
+from tkinter.messagebox import showerror
 
 np.set_printoptions(precision=3)
 
@@ -42,9 +38,13 @@ class Experiment:
         self.sigma = np.sqrt((2 * (2 * self.m - 2)) / (self.m * (self.m - 4)))
 
         if not self.check_r():
-            print(f'\n Дісперсія неоднорідна! Змінимо m={self.m} на m={self.m + 1}\n')
-            self.m += 1
-            self.experiment()
+            if self.m <= 9:
+                print(f'\n Дісперсія неоднорідна! Змінимо m={self.m} на m={self.m + 1}\n')
+                self.m += 1
+                self.experiment()
+            else:
+                showerror("Помилка", "немає табличних даних")
+                exit("Error: немає табличних даних")
 
     def make_norm_plan_matrix(self) -> np.array:
         self.N = self.plan_matrix.shape[0]
